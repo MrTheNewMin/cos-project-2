@@ -125,5 +125,8 @@ uint8_t *ProcessManager::processData(DataSet *ds, int *dlen)
   VAR_TO_MEM_1BYTE_BIG_ENDIAN(month, p);
   *dlen += 1;
 
+  VAR_TO_MEM_1BYTE_BIG_ENDIAN(this->vectorType, p);
+  *dlen += 1;
+
   return ret;
 }

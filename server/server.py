@@ -102,9 +102,12 @@ class Server:
         humid = int.from_bytes(buf[1:2], byteorder="big", signed=True)
         power = int.from_bytes(buf[2:4], byteorder="big", signed=True)
         month = int.from_bytes(buf[4:5], byteorder="big", signed=True)
+        vectortype = int.from_bytes(buf[5:6], byteorder="big", singed=True)
 
+        vec = [vectortype]
         lst = [temp, humid, power, month]
         logging.info("[temp, humid, power, month] = {}".format(lst))
+        logging.info("Vector Type = {}".format(vec))
 
         self.send_instance(lst, is_training)
 
@@ -125,7 +128,10 @@ class Server:
 
             if opcode == OPCODE_DATA:
                 logging.info("[*] data report from the edge")
-                rbuf = client.recv(5)
+                len_buf = client.recv(1)
+                dlen = int.from_bytes(len_buf, "big")
+    
+                rbuf = client.recv(dlen) 
                 logging.debug("[*] received buf: {}".format(rbuf))
                 self.parse_data(rbuf, True)
             else:
@@ -163,9 +169,12 @@ class Server:
 
             if opcode == OPCODE_DATA:
                 logging.info("[*] data report from the edge")
-                rbuf = client.recv(5)
+                len_buf = client.recv(1)
+                dlen = int.from_bytes(len_buf, "big")
+    
+                rbuf = client.recv(dlen) 
                 logging.debug("[*] received buf: {}".format(rbuf))
-                self.parse_data(rbuf, False)
+                self.parse_data(rbuf, True)
             else:
                 logging.error("[*] invalid opcode")
                 logging.error("[*] please try again")
