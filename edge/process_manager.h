@@ -7,6 +7,8 @@
 class ProcessManager {
   private:
     int num;
+    int vectorType;
+    int loadVectorType();
   public:
     ProcessManager();
 
